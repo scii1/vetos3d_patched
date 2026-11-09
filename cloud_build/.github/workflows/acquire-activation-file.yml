@@ -10,15 +10,39 @@ jobs:
   activation:
     name: Request Unity .alf Activation File
     runs-on: ubuntu-latest
+    container:
+      image: unityci/editor:ubuntu-2022.3.11f1-base-3
     steps:
-      - name: Request manual activation file
-        uses: game-ci/unity-request-activation-file@v2
-        id: step_alf
-        with:
-          unityVersion: 2022.3.11f1
+      - name: Generate manual activation file
+        run: |
+          echo "==> Unity başlatılıyor ve aktivasyon dosyası isteniyor..."
+          if command -v unity-editor >/dev/null 2>&1; then
+            UNITY_BIN="unity-editor"
+          elif [ -f "/opt/unity/Editor/Unity" ]; then
+            UNITY_BIN="/opt/unity/Editor/Unity"
+          else
+            UNITY_BIN="Unity"
+          fi
+          
+          $UNITY_BIN -batchmode -nographics -createManualActivationFile -logfile /dev/stdout || true
+
+          echo "==> Üretilen .alf dosyaları taranıyor..."
+          ALF_FILE=$(find /root -name "*.alf" 2>/dev/null | head -n 1)
+          if [ -z "$ALF_FILE" ]; then
+            ALF_FILE=$(find . -name "*.alf" 2>/dev/null | head -n 1)
+          fi
+
+          if [ -n "$ALF_FILE" ] && [ -f "$ALF_FILE" ]; then
+            echo "Bulunan alf dosyası: $ALF_FILE"
+            cp "$ALF_FILE" ./Unity_v2022.3.11f1.alf
+            ls -la ./Unity_v2022.3.11f1.alf
+          else
+            echo "❌ HATA: .alf dosyası bulunamadı!"
+            exit 1
+          fi
 
       - name: Expose as artifact
         uses: actions/upload-artifact@v4
         with:
           name: Unity_v2022.3.11f1.alf
-          path: ${{ steps.step_alf.outputs.filePath }}
+          path: ./Unity_v2022.3.11f1.alf

@@ -1,5 +1,5 @@
 // ============================================================================
-// VetOs 3D Enhanced - Headless / Cloud Android Build Script
+// VetOs 3D Patched - Headless / Cloud Android Build Script
 // Dosya: Assets/Editor/VetOsBuildScript.cs (veya cloud_build/VetOsBuildScript.cs)
 // Amac: Unity 2022.3.11f1 üzerinde 64-bit ARM64 (arm64-v8a) ve 32-bit ARMv7
 //       destekli IL2CPP Android APK derlemesini tam otomatik yürütmek.
@@ -187,7 +187,7 @@ public static class VetOsBuildScript
                 {
                     if (Directory.Exists(custom) || custom.EndsWith("/") || custom.EndsWith("\\"))
                     {
-                        return Path.Combine(custom, "VetOs_ARM64.apk");
+                        return Path.Combine(custom, "patched.apk");
                     }
                     if (!custom.EndsWith(".apk", StringComparison.OrdinalIgnoreCase))
                     {
@@ -198,7 +198,7 @@ public static class VetOsBuildScript
             }
         }
 
-        // Varsayılan yol: <proje_kökü>/builds/Android/VetOs_ARM64.apk
-        return Path.Combine(Directory.GetCurrentDirectory(), "builds", "Android", "VetOs_ARM64.apk");
+        // Varsayılan yol: <proje_kökü>/builds/Android/patched.apk
+        return Path.Combine(Directory.GetCurrentDirectory(), "builds", "Android", "patched.apk");
     }
 }

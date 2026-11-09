@@ -87,7 +87,7 @@ jobs:
           targetPlatform: Android
           projectPath: ${{ env.PROJECT_PATH }}
           buildMethod: VetOsBuildScript.ConfigureAndBuildAndroid
-          buildName: VetOs_ARM64
+          buildName: patched
           buildsPath: builds
           androidAppBundle: false
           androidTargetSdkVersion: AndroidApiLevel33
@@ -142,10 +142,19 @@ jobs:
             apksigner verify -v "$APK_FILE"
           done
 
+          # APK dosya adının tam olarak patched.apk olmasını sağla
+          if [ -f "builds/Android/VetOs_ARM64.apk" ]; then
+            mv "builds/Android/VetOs_ARM64.apk" "builds/Android/patched.apk"
+          fi
+          PRIMARY_APK=$(find builds/Android -name "*.apk" ! -name "patched.apk" | head -n 1)
+          if [ -n "$PRIMARY_APK" ] && [ ! -f "builds/Android/patched.apk" ]; then
+            mv "$PRIMARY_APK" "builds/Android/patched.apk"
+          fi
+
       # 7. Otomatik 64-bit (arm64-v8a) Doğrulama Testi (CI QA Step)
       - name: Verify 64-bit (arm64-v8a) Architecture in APK
         run: |
-          APK_FILE=$(find builds/Android -name "*VetOs_ARM64*.apk" -o -name "*.apk" | head -n 1)
+          APK_FILE=$(find builds/Android -name "*patched*.apk" -o -name "*.apk" | head -n 1)
           if [ -z "$APK_FILE" ]; then
             echo "❌ HATA: builds/Android/ altında APK dosyası bulunamadı!"
             exit 1
@@ -189,7 +198,7 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: VetOs-Android-ARM64-APK
+          name: patched-apk
           path: builds/Android/*.apk
           retention-days: 14
 
@@ -201,11 +210,11 @@ jobs:
           tag_name: v1.0.1-arm64
           name: "VetOs 3D v1.0.1 (ARM64 + ARMv7 Android APK)"
           body: |
-            ## 🐾 VetOs 3D Enhanced - Android 64-Bit ARM64 + ARMv7 APK
+            ## 🐾 VetOs 3D - Android 64-Bit ARM64 + ARMv7 APK
             Bu sürüm, **Honor Pad ve modern 64-bit Android cihazlar** için IL2CPP ve OpenGLES3 motoruyla optimize edilmiş tam kurulum paketidir.
             
             ### 📥 Doğrudan İndirme (Direct Download)
-            Aşağıdaki **Assets** bölümünden **`VetOs_ARM64.apk`** dosyasına tıklayarak doğrudan tablet veya telefonunuza indirip kurabilirsiniz (Google Drive veya ek araç gerektirmez).
+            Aşağıdaki **Assets** bölümünden **`patched.apk`** dosyasına tıklayarak doğrudan tablet veya telefonunuza indirip kurabilirsiniz (Google Drive veya ek araç gerektirmez).
             
             - **Paket Adı:** `com.ZCortex.VetOs`
             - **Mimari:** ARM64 (arm64-v8a) + ARMv7 (armeabi-v7a)
