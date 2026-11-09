@@ -1,0 +1,12 @@
+# VetOs 3D Enhanced .gitignore
+backup/
+work/
+tools/
+decompiled/
+extracted/
+bin/
+obj/
+*.user
+*.suo
+.vs/
+.idea/
