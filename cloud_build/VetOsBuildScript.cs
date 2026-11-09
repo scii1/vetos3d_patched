@@ -187,7 +187,7 @@ public static class VetOsBuildScript
                 {
                     if (Directory.Exists(custom) || custom.EndsWith("/") || custom.EndsWith("\\"))
                     {
-                        return Path.Combine(custom, "patched.apk");
+                        return Path.Combine(custom, "vetos3d_patched.apk");
                     }
                     if (!custom.EndsWith(".apk", StringComparison.OrdinalIgnoreCase))
                     {
@@ -198,7 +198,7 @@ public static class VetOsBuildScript
             }
         }
 
-        // Varsayılan yol: <proje_kökü>/builds/Android/patched.apk
-        return Path.Combine(Directory.GetCurrentDirectory(), "builds", "Android", "patched.apk");
+        // Varsayılan yol: <proje_kökü>/builds/Android/vetos3d_patched.apk
+        return Path.Combine(Directory.GetCurrentDirectory(), "builds", "Android", "vetos3d_patched.apk");
     }
 }
