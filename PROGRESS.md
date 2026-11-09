@@ -28,7 +28,7 @@ Tüm temel araçlar kurulmuş ve doğrulanmıştır:
 - `work\`: ~618 MB (`VetOs_Game` modlama ve çalışma alanı).
 - `tools\`: ~514 MB (Geliştirici ve tersine mühendislik araçları).
 - `decompiled\`: Tamamlandı (`Assembly-CSharp.dll` tüm C# sınıfları decompile edildi).
-- `extracted\`: Faz 0/AssetRipper için hazır.
+- `extracted\`: Tamamlandı (`VetOs_Android\ExportedProject` Unity 2022.3.11f1 projesi olarak 0 MB internet ile AssetRipper üzerinden tam çıkartıldı).
 - `.agents\rules\vetos-kurallar.md`: Oluşturuldu (Proje kuralları ve alt ajan ilkeleri).
 - `ANALYSIS.md`: Oluşturuldu (Kapsamlı mimari analiz raporu).
 
@@ -56,12 +56,19 @@ Tüm temel araçlar kurulmuş ve doğrulanmıştır:
 4. **İlk Eklenti Derlemesi:** `Plugin.cs` (Harmony başlatma, loglama ve F1 test kancası) `.NET 8` SDK ile sıfır hata ve sıfır uyarıyla derlenerek `work\VetOs_Game\BepInEx\plugins\VetOsEnhanced.dll` olarak dağıtıldı.
 5. **Özel Proje Yetenekleri (Skills):** `.agents\skills\` altında 5 kritik proje yeteneği (`bepinex-harmony-modder`, `unity-android-arm64-rebuilder`, `unity-comparative-anatomy-matrix`, `unity-mono-headless-inspector`, `vet-anatomy-terminology-sync`) oluşturuldu.
 6. **Türkçe Terminoloji Sözlüğü:** `assets\terms.json` (NAV 6. Baskı standartlarında köpek, at, sığır ve koyun temel kemik ve çıkıntıları) hazırlandı.
+7. **AssetRipper ile Android APK'dan Unity 2022.3.11f1 Projesi Çıkarıldı (0 MB İnternet):** `work\apk_inspect\ZCortex.VetOs.apk` (219.33 MB), yerel Kestrel REST API otomasyonu (`run_export.ps1`) ile `extracted\VetOs_Android\ExportedProject` dizinine tam bir Unity projesi olarak aktarıldı. 7.695 dosya (489.1 MB), 2 sahne (`Entrance.unity`, `Animals.unity`), 2.488 3D model/mesh, 2.494 kaplama ve C# oyun scriptleri doğrulandı.
 
 ---
 
-## 4. Sıradaki Adım
+## 4. Sıradaki Adımlar ve Öncelikler
 
-**Faz 2: Türkçe Sözlük Enjeksiyonu ve İlk Harmony Yaması**
+### [>] Güncel Öncelik: 64-bit Android ARM64 APK Bulut Derlemesi (GitHub Actions)
+- Modern 64-bit Android cihazlar (Honor Pad, Android 13/14+) için `arm64-v8a` APK üretimi GitHub Actions (`game-ci/unity-builder@v4`) ile bulutta çalıştırılacaktır.
+- **İnternet Kotası Güncellemesi:** APK bulut derleme işlemi için internet kotası **600 MB** olarak güncellenmiştir.
+- `cloud_build/` altında `.github/workflows/build-android-arm64.yml` ve `VetOsBuildScript.cs` taslakları hazırlanmaktadır.
+
+### [!] Beklemedeki Görev: Faz 2 (Türkçe Sözlük Enjeksiyonu ve Harmony Yaması)
+- `UNUTMA`: Faz 2 için bekleyen kullanıcı sorusu ("Kemik/pin isimlerinin görünüm tercihi: A / B / C") APK görevi sonrasında cevaplanmak üzere beklemeye alınmıştır. APK tamamlanınca bu soruya dönülecektir.
 1. `Plugin.cs` içerisine `assets\terms.json` okuyucusunun eklenmesi.
 2. `UI_TreeViewController.ShowBoneInfo` ve `UI_PinPoint_Controller` için Harmony Postfix yamalarının yazılarak arayüzdeki Latince zorunluluğunun Türkçe ile değiştirilmesi.
 3. Modlu oyunun çalıştırılarak ekranda test edilmesi.

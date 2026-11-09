@@ -32,4 +32,10 @@ Bu kurallar VetOs 3D Enhanced projesinde çalışan tüm yapay zeka modelleri ve
 
 ### 5. İnternet / Veri Kotası Kuralı
 - `10.11.2026 saat 06:00`'a kadar yapılacak tüm işlemlerde toplam internet indirmesi **kesinlikle 100 MB'ı aşmamalıdır** (mümkünse 0 MB / tamamen çevrimdışı çalışılmalıdır).
-- Büyük boyutlu indirmeler (Android SDK/NDK vb.) yalnızca bu saatten sonra veya kullanıcı açıkça onay verdiğinde yapılabilir.
+- **İstisna / Güncelleme:** APK bulut derleme işlemi (GitHub Actions hazırlığı, repo push vb.) için internet kotası **600 MB** olarak güncellenmiştir.
+- Büyük boyutlu indirmeler (yerel Android SDK/NDK vb.) yalnızca bu saatten sonra veya kullanıcı açıkça onay verdiğinde yapılabilir.
+
+---
+
+### 6. Bekleyen Kararlar ve Notlar
+- `UNUTMA`: Faz 2 için bekleyen kullanıcı sorusu ("Kemik/pin isimlerinin görünüm tercihi: A / B / C") APK derleme görevi sonrasında cevaplanmak üzere beklemeye alınmıştır. APK süreci biter bitmez kullanıcıya sunulacaktır.

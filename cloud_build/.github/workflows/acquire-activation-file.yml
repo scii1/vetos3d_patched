@@ -1,0 +1,21 @@
+name: Acquire Unity Activation File (.alf)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  activation:
+    name: Request Unity .alf Activation File
+    runs-on: ubuntu-latest
+    steps:
+      - name: Request manual activation file
+        uses: game-ci/unity-request-activation-file@v4
+        id: step_alf
+        with:
+          unityVersion: 2022.3.11f1
+
+      - name: Expose as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Unity_v2022.3.11f1.alf
+          path: ${{ steps.step_alf.outputs.filePath }}

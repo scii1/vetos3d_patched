@@ -1,0 +1,218 @@
+name: Build Android ARM64 APK (VetOs 3D)
+
+on:
+  workflow_dispatch:
+    inputs:
+      project_subpath:
+        description: 'Unity Proje Yolu (varsayılan: extracted/VetOs_Android/ExportedProject veya kök)'
+        required: false
+        default: 'extracted/VetOs_Android/ExportedProject'
+  push:
+    branches:
+      - master
+      - main
+    paths:
+      - 'cloud_build/archive/**'
+      - 'cloud_build/**'
+      - 'extracted/VetOs_Android/**'
+      - '.github/workflows/build-android-arm64.yml'
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-android:
+    name: Build Unity 2022.3.11f1 Android ARM64
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Depoyu İndir
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      # 2. 7-Zip Arşivini Aç (Bulut Yükleme Boyutu ve Kota Optimizasyonu)
+      - name: Extract Unity Project from 7-Zip Archive
+        run: |
+          if [ -f "cloud_build/archive/ExportedProject.7z.001" ]; then
+            echo "==> 7-Zip çok parçalı arşivi bulundu. Proje extracted/VetOs_Android/ içine açılıyor..."
+            mkdir -p extracted/VetOs_Android
+            7z x cloud_build/archive/ExportedProject.7z.001 -oextracted/VetOs_Android/ -y
+            echo "==> Arşiv başarıyla açıldı."
+          else
+            echo "==> 7z arşivi bulunamadı, mevcut dizin yapısı kontrol ediliyor."
+          fi
+
+      # 3. Editor Betiğini Projeye Kopyala (Eğer projede henüz yoksa)
+      - name: Ensure VetOsBuildScript in Project Assets
+        run: |
+          PROJ_PATH="${{ github.event.inputs.project_subpath || 'extracted/VetOs_Android/ExportedProject' }}"
+          if [ ! -d "$PROJ_PATH" ]; then
+            if [ -d "Assets" ]; then
+              PROJ_PATH="."
+            fi
+          fi
+          echo "Kullanılan Unity Proje Dizini: $PROJ_PATH"
+          echo "PROJECT_PATH=$PROJ_PATH" >> $GITHUB_ENV
+
+          mkdir -p "$PROJ_PATH/Assets/Editor"
+          if [ -f "cloud_build/VetOsBuildScript.cs" ]; then
+            cp "cloud_build/VetOsBuildScript.cs" "$PROJ_PATH/Assets/Editor/VetOsBuildScript.cs"
+            echo "VetOsBuildScript.cs başarıyla Assets/Editor altına yerleştirildi."
+          fi
+
+      # 4. Unity Kütüphane Önbelleği (Library Cache) - Derleme süresini dramatik azaltır
+      - name: Cache Unity Library
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.PROJECT_PATH }}/Library
+          key: Library-Android-${{ hashFiles(format('{0}/Assets/**', env.PROJECT_PATH), format('{0}/Packages/**', env.PROJECT_PATH), format('{0}/ProjectSettings/**', env.PROJECT_PATH)) }}
+          restore-keys: |
+            Library-Android-
+
+      # 5. GameCI Unity Builder ile ARM64 IL2CPP Android APK Derlemesi
+      - name: Run Unity Builder (game-ci/unity-builder@v4)
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          unityVersion: 2022.3.11f1
+          targetPlatform: Android
+          projectPath: ${{ env.PROJECT_PATH }}
+          buildMethod: VetOsBuildScript.ConfigureAndBuildAndroid
+          buildName: VetOs_ARM64
+          buildsPath: builds
+          androidAppBundle: false
+          androidTargetSdkVersion: AndroidApiLevel33
+          androidExportType: androidPackage
+
+      # 6. APK Hizalama ve V1+V2+V3 İmzalama (Android 11-15 Cihaz Uyumluluğu)
+      - name: Align and Sign APK (zipalign & apksigner)
+        run: |
+          BUILD_TOOLS_DIR=$(ls -d ${ANDROID_HOME:-/usr/local/lib/android/sdk}/build-tools/* | sort -V | tail -n 1)
+          export PATH="$BUILD_TOOLS_DIR:$PATH"
+          echo "Kullanılan Android Build Tools: $BUILD_TOOLS_DIR"
+
+          KEYSTORE_PATH="release.keystore"
+          KEY_ALIAS="vetos"
+          KEY_PASS="vetos123"
+
+          if [ ! -f "$KEYSTORE_PATH" ]; then
+            echo "==> Otomatik Release Keystore üretiliyor (keytool)..."
+            keytool -genkeypair -v \
+              -keystore "$KEYSTORE_PATH" \
+              -alias "$KEY_ALIAS" \
+              -keyalg RSA \
+              -keysize 2048 \
+              -validity 10000 \
+              -storepass "$KEY_PASS" \
+              -keypass "$KEY_PASS" \
+              -dname "CN=VetOs, OU=VetOs3D, O=ZCortex, L=Istanbul, ST=Istanbul, C=TR"
+          fi
+
+          for APK_FILE in $(find builds/Android -name "*.apk"); do
+            echo "==> İşleniyor: $APK_FILE"
+            
+            # 4-byte ve sayfa hizalaması (Android 11-15 uyumu için -p -f 4)
+            echo "  -> zipalign uygulanıyor..."
+            zipalign -p -f 4 "$APK_FILE" "${APK_FILE%.apk}_aligned.apk"
+            mv "${APK_FILE%.apk}_aligned.apk" "$APK_FILE"
+            
+            # V1, V2, V3 Şemaları ile İmzalama
+            echo "  -> apksigner (V1 + V2 + V3) ile imzalanıyor..."
+            apksigner sign \
+              --ks "$KEYSTORE_PATH" \
+              --ks-pass "pass:$KEY_PASS" \
+              --ks-key-alias "$KEY_ALIAS" \
+              --key-pass "pass:$KEY_PASS" \
+              --v1-signing-enabled true \
+              --v2-signing-enabled true \
+              --v3-signing-enabled true \
+              "$APK_FILE"
+            
+            # Doğrulama
+            echo "  -> İmza doğrulanıyor..."
+            apksigner verify -v "$APK_FILE"
+          done
+
+      # 7. Otomatik 64-bit (arm64-v8a) Doğrulama Testi (CI QA Step)
+      - name: Verify 64-bit (arm64-v8a) Architecture in APK
+        run: |
+          APK_FILE=$(find builds/Android -name "*VetOs_ARM64*.apk" -o -name "*.apk" | head -n 1)
+          if [ -z "$APK_FILE" ]; then
+            echo "❌ HATA: builds/Android/ altında APK dosyası bulunamadı!"
+            exit 1
+          fi
+
+          echo "==> İncelenen APK: $APK_FILE"
+          APK_CONTENTS=$(unzip -l "$APK_FILE")
+
+          echo "==> Bulunan Kütüphaneler (lib/):"
+          echo "$APK_CONTENTS" | grep "lib/" || true
+
+          HAS_IL2CPP=0
+          HAS_UNITY=0
+
+          if echo "$APK_CONTENTS" | grep -q "lib/arm64-v8a/libil2cpp.so"; then
+            echo "  ✓ lib/arm64-v8a/libil2cpp.so MEVCUT"
+            HAS_IL2CPP=1
+          else
+            echo "  ❌ lib/arm64-v8a/libil2cpp.so BULUNAMADI!"
+          fi
+
+          if echo "$APK_CONTENTS" | grep -q "lib/arm64-v8a/libunity.so"; then
+            echo "  ✓ lib/arm64-v8a/libunity.so MEVCUT"
+            HAS_UNITY=1
+          else
+            echo "  ❌ lib/arm64-v8a/libunity.so BULUNAMADI!"
+          fi
+
+          if [ $HAS_IL2CPP -eq 1 ] && [ $HAS_UNITY -eq 1 ]; then
+            echo "=========================================================="
+            echo "✅ 64-BIT (arm64-v8a) APK DOĞRULANDI!"
+            echo "=========================================================="
+          else
+            echo "=========================================================="
+            echo "❌ HATA: APK içinde 64-bit arm64-v8a kütüphaneleri eksik! Build durduruluyor."
+            echo "=========================================================="
+            exit 1
+          fi
+
+      # 8. Derlenen APK Çıktısını GitHub Artifact Olarak Yayınla
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: VetOs-Android-ARM64-APK
+          path: builds/Android/*.apk
+          retention-days: 14
+
+      # 9. Doğrudan Tek Tıkla İndirme İçin Otomatik GitHub Release Oluşturma
+      - name: Create GitHub Release with APK Asset
+        uses: softprops/action-gh-release@v2
+        if: success()
+        with:
+          tag_name: v1.0.1-arm64
+          name: "VetOs 3D v1.0.1 (ARM64 + ARMv7 Android APK)"
+          body: |
+            ## 🐾 VetOs 3D Enhanced - Android 64-Bit ARM64 + ARMv7 APK
+            Bu sürüm, **Honor Pad ve modern 64-bit Android cihazlar** için IL2CPP ve OpenGLES3 motoruyla optimize edilmiş tam kurulum paketidir.
+            
+            ### 📥 Doğrudan İndirme (Direct Download)
+            Aşağıdaki **Assets** bölümünden **`VetOs_ARM64.apk`** dosyasına tıklayarak doğrudan tablet veya telefonunuza indirip kurabilirsiniz (Google Drive veya ek araç gerektirmez).
+            
+            - **Paket Adı:** `com.ZCortex.VetOs`
+            - **Mimari:** ARM64 (arm64-v8a) + ARMv7 (armeabi-v7a)
+            - **Grafik API:** OpenGLES3 (GL.LINES / Pin Texts uyumlu)
+            - **Hedef SDK:** Android 13+ (API 33) | Min SDK: Android 7.0 (API 24)
+          files: |
+            builds/Android/*.apk
+          draft: false
+          prerelease: false
+          generate_release_notes: false

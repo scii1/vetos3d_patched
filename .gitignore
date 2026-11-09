@@ -1,4 +1,6 @@
 # VetOs 3D Enhanced .gitignore
+
+# Çalışma ve geçici dizinler (Büyük dosyalar / ham çıktılar)
 backup/
 work/
 tools/
@@ -10,3 +12,11 @@ obj/
 *.suo
 .vs/
 .idea/
+
+# GitHub Actions ve Cloud Build Arşivlerinin Git Tarafından Takip Edilmesini Garantiye Al
+!cloud_build/
+!cloud_build/archive/
+!cloud_build/archive/ExportedProject.7z.*
+!.github/
+!.github/workflows/
+!.github/workflows/*.yml
