@@ -2,7 +2,7 @@
 name: bepinex-harmony-modder
 description: >-
   Unity 2022.3.11f1 Mono x64 tabanlı VetOs 3D Enhanced projesi için BepInEx 5 kurulumunu,
-  Harmony çalışma zamanı kancalarını, .NET SDK ile net472 eklenti derleme ve test süreçlerini yönetir.
+  Harmony çalışma zamanı kancalarını, .NET SDK ile netstandard2.1 eklenti derleme ve test süreçlerini yönetir.
 ---
 
 # BepInEx & Harmony Modder Skill
@@ -12,11 +12,11 @@ Bu yetenek, `work\VetOs_Game` dizinindeki Unity Mono x64 uygulamasını modlamak
 ## Prosedür
 
 1. **BepInEx ve UnityExplorer Kurulumu:**
-   - `tools\BepInEx_x64_5.4.23.6` içeriğini `work\VetOs_Game\` kök dizinine yerleştir (`winhttp.dll`, `doorstop_config.ini`, `BepInEx/`).
+   - `tools\BepInEx` içeriğini `work\VetOs_Game\` kök dizinine yerleştir (`winhttp.dll`, `doorstop_config.ini`, `BepInEx/`).
    - `tools\UnityExplorer.BepInEx5.Mono` dosyalarını `work\VetOs_Game\BepInEx\plugins\UnityExplorer` klasörüne kopyala.
 
 2. **C# Mod Projesi Yapılandırması (`src\VetOsEnhanced\`):**
-   - SDK-style `.csproj` dosyası `net472` hedefler ve `Microsoft.NETFramework.ReferenceAssemblies` NuGet paketini içerir.
+   - SDK-style `.csproj` dosyası `netstandard2.1` hedefler (çevrimdışı yerel `VetOs_Data\Managed` DLL referansları ile 0 MB internet kullanımı).
    - Referanslar:
      - `work\VetOs_Game\VetOs_Data\Managed\UnityEngine.dll`
      - `work\VetOs_Game\VetOs_Data\Managed\UnityEngine.CoreModule.dll`

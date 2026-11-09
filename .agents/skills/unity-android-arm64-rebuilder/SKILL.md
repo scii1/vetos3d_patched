@@ -7,13 +7,13 @@ description: >-
 
 # Unity Android ARM64 Rebuilder Skill
 
-Bu yetenek, 32-bit `armeabi-v7a` mimarisiyle sınırlandırılmış olan VetOs 3D Android uygulamasını (`ZCortex.VetOs.apk`), AssetRipper kullanarak eksiksiz bir Unity projesine dönüştürme ve Unity Editor 2022.3.11f1 ortamında 64-bit **ARM64 (arm64-v8a)** IL2CPP APK olarak yeniden derleme iş akışını yönetir.
+Bu yetenek, 32-bit `armeabi-v7a` mimarisiyle sınırlandırılmış olan VetOs 3D Android uygulamasını (`work\apk_inspect\ZCortex.VetOs.apk`), AssetRipper kullanarak eksiksiz bir Unity projesine dönüştürme ve Unity Editor 2022.3.11f1 ortamında 64-bit **ARM64 (arm64-v8a)** IL2CPP APK olarak yeniden derleme iş akışını yönetir.
 
 ---
 
 ## 1. Problemin Tanımı ve Kök Neden Analizi
 
-- **Mevcut Durum:** Orijinal `ZCortex.VetOs.apk` paketi incelendiğinde, `lib/` dizini altında yalnızca 32-bit `armeabi-v7a` kütüphanelerinin (`libmono.so`, `libunity.so` vb.) bulunduğu görülmektedir.
+- **Mevcut Durum:** Orijinal `ZCortex.VetOs.apk` paketi (`work\apk_inspect\ZCortex.VetOs.apk`) incelendiğinde, `lib/` dizini altında yalnızca 32-bit `armeabi-v7a` kütüphanelerinin (`libmono.so`, `libunity.so` vb.) bulunduğu görülmektedir.
 - **Hata:** Modern Honor Pad tabletler, Google Pixel telefonlar ve Android 13/14+ yüklü yeni nesil mobil yongalar (Snapdragon 8 Gen 2/3, Dimensity 9200+ vb.) 32-bit komut kütüğünü tamamen terk etmiştir (64-bit-only mimari). Bu nedenle kurulum anında Android Paket Yöneticisi şu hatayı fırlatır:
   ```text
   INSTALL_FAILED_CPU_ABI_INCOMPATIBLE: Package couldn't be installed. The phone's CPU architecture does not support this app.
@@ -32,7 +32,7 @@ AssetRipper GUI veya CLI modu kullanılarak APK arşivi decompile edilir ve Unit
 & "tools\AssetRipper\AssetRipper.GUI.Free.exe" `
     --export-unity-project `
     "extracted\VetOs_UnityProject" `
-    "C:\Users\user\Downloads\ZCortex.VetOs.apk"
+    "work\apk_inspect\ZCortex.VetOs.apk"
 ```
 
 *Not:* Dışa aktarma işlemi tamamlandığında `extracted\VetOs_UnityProject` dizininde `Assets/`, `ProjectSettings/` ve `Packages/` klasörleri oluşacaktır.

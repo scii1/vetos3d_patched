@@ -27,3 +27,9 @@ Bu kurallar VetOs 3D Enhanced projesinde çalışan tüm yapay zeka modelleri ve
 - Projeyi yeni devralan her model/ajan çalışmaya başlamadan önce mutlaka `PLAN.md`, `PROGRESS.md` ve `ANALYSIS.md` dosyalarını okuyarak güncel durumu ve mimariyi kavramalıdır.
 - Her aşama ve kritik kilometre taşı tamamlandığında `PROGRESS.md` dosyası güncellenmeli ve Git commit (`git commit`) alınarak durum kalıcılaştırılmalıdır.
 - Orijinal ikili dosyalar, çıkarılan assetler ve decompile edilen kaynak kodlar `.gitignore` kurallarına uygun olarak depoya eklenmez; sadece dokümantasyon, kurallar ve geliştirilen mod/eklenti kaynakları Git'e dahil edilir.
+
+---
+
+### 5. İnternet / Veri Kotası Kuralı
+- `10.11.2026 saat 06:00`'a kadar yapılacak tüm işlemlerde toplam internet indirmesi **kesinlikle 100 MB'ı aşmamalıdır** (mümkünse 0 MB / tamamen çevrimdışı çalışılmalıdır).
+- Büyük boyutlu indirmeler (Android SDK/NDK vb.) yalnızca bu saatten sonra veya kullanıcı açıkça onay verdiğinde yapılabilir.
