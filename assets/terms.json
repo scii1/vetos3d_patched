@@ -1,0 +1,185 @@
+{
+  "version": "1.0.0",
+  "standard": "Nomina Anatomica Veterinaria (NAV 6th Edition)",
+  "description": "VetOs 3D Enhanced - Türkçe / Latince / İngilizce Anatomik Terminoloji ve Açıklama Sözlüğü",
+  "bones": [
+    {
+      "bone_id": "FEMUR",
+      "group_codes": ["A", "B", "C", "D"],
+      "latine_name": "Os femoris",
+      "turkish_name": "Uyluk Kemiği (Femur)",
+      "english_name": "Thigh bone / Femur",
+      "landmarks": [
+        {
+          "pin_id": "CAPUT_FEMORIS",
+          "latine": "Caput ossis femoris",
+          "turkish": "Femur başı",
+          "english": "Head of the femur",
+          "desc_tr": "Pelvis'teki acetabulum ile eklemleşen küresel eklem başı."
+        },
+        {
+          "pin_id": "COLLUM_FEMORIS",
+          "latine": "Collum ossis femoris",
+          "turkish": "Femur boynu",
+          "english": "Neck of the femur",
+          "desc_tr": "Femur başını gövdeye bağlayan dar bölge."
+        },
+        {
+          "pin_id": "TROCHANTER_MAJOR",
+          "latine": "Trochanter major",
+          "turkish": "Büyük tüberkül (Trokanter major)",
+          "english": "Greater trochanter",
+          "desc_tr": "Gluteal kasların yapışma noktası olan lateral çıkıntı."
+        },
+        {
+          "pin_id": "TROCHANTER_TERTIUS",
+          "latine": "Trochanter tertius",
+          "turkish": "Üçüncü trokanter (Yalnızca atta belirgindir)",
+          "english": "Third trochanter",
+          "desc_tr": "Gluteus superficialis kasının tutunduğu, atlarda çok belirgin lateral çıkıntı."
+        },
+        {
+          "pin_id": "CONDYLUS_MEDIALIS",
+          "latine": "Condylus medialis",
+          "turkish": "İç kondil",
+          "english": "Medial condyle",
+          "desc_tr": "Tibia ile eklemleşen iç eklem yumrusu."
+        },
+        {
+          "pin_id": "CONDYLUS_LATERALIS",
+          "latine": "Condylus lateralis",
+          "turkish": "Dış kondil",
+          "english": "Lateral condyle",
+          "desc_tr": "Tibia ve menisküsler ile eklemleşen dış eklem yumrusu."
+        }
+      ]
+    },
+    {
+      "bone_id": "HUMERUS",
+      "group_codes": ["A", "B", "C", "D"],
+      "latine_name": "Humerus",
+      "turkish_name": "Kol Kemiği (Humerus)",
+      "english_name": "Arm bone / Humerus",
+      "landmarks": [
+        {
+          "pin_id": "CAPUT_HUMERI",
+          "latine": "Caput humeri",
+          "turkish": "Humerus başı",
+          "english": "Head of the humerus",
+          "desc_tr": "Scapula'nın cavitas glenoidalis çukuru ile omuz eklemini oluşturan eklem başı."
+        },
+        {
+          "pin_id": "TUBERCULUM_MAJUS",
+          "latine": "Tuberculum majus",
+          "turkish": "Büyük tüberkül",
+          "english": "Greater tubercle",
+          "desc_tr": "Omuz ekleminin kraniyolateralinde yer alan büyük çıkıntı."
+        },
+        {
+          "pin_id": "TUBEROSITAS_DELTOIDEA",
+          "latine": "Tuberositas deltoidea",
+          "turkish": "Deltoid çıkıntı",
+          "english": "Deltoid tuberosity",
+          "desc_tr": "M. deltoideus kasının yapıştığı kemik kabartısı."
+        },
+        {
+          "pin_id": "TROCHLEA_HUMERI",
+          "latine": "Trochlea humeri",
+          "turkish": "Humerus makarası",
+          "english": "Trochlea of humerus",
+          "desc_tr": "Radius ve ulna ile dirsek eklemini kuran makara şeklindeki distal eklem yüzü."
+        }
+      ]
+    },
+    {
+      "bone_id": "SCAPULA",
+      "group_codes": ["A", "B", "C", "D"],
+      "latine_name": "Scapula",
+      "turkish_name": "Kürek Kemiği (Scapula)",
+      "english_name": "Shoulder blade / Scapula",
+      "landmarks": [
+        {
+          "pin_id": "SPINA_SCAPULAE",
+          "latine": "Spina scapulae",
+          "turkish": "Skapula dikeni",
+          "english": "Spine of scapula",
+          "desc_tr": "Skapulanın lateral yüzünü fossa supraspinata ve fossa infraspinata olarak ikiye bölen uzun kabartı."
+        },
+        {
+          "pin_id": "ACROMION",
+          "latine": "Acromion",
+          "turkish": "Akromiyon",
+          "english": "Acromion",
+          "desc_tr": "Spina scapulae'nin ventral ucundaki çıkıntı (Köpekte çok belirgin, atta bulunmaz)."
+        },
+        {
+          "pin_id": "CAVITAS_GLENOIDALIS",
+          "latine": "Cavitas glenoidalis",
+          "turkish": "Glenoid çukurluk",
+          "english": "Glenoid cavity",
+          "desc_tr": "Caput humeri ile eklemleşen sığ eklem çukuru."
+        }
+      ]
+    },
+    {
+      "bone_id": "OS_COXAE",
+      "group_codes": ["A", "B", "C", "D"],
+      "latine_name": "Os coxae",
+      "turkish_name": "Kalça Kemiği (Pelvis)",
+      "english_name": "Hip bone / Pelvis",
+      "landmarks": [
+        {
+          "pin_id": "ILIUM",
+          "latine": "Os ilii",
+          "turkish": "İliyum (Leğen kemiği kanadı)",
+          "english": "Ilium",
+          "desc_tr": "Pelvis'in kraniyal ve en büyük bölümü."
+        },
+        {
+          "pin_id": "ISCHIUM",
+          "latine": "Os ischii",
+          "turkish": "İşkiyum (Oturga kemiği)",
+          "english": "Ischium",
+          "desc_tr": "Pelvis'in kaudoventral bölümü."
+        },
+        {
+          "pin_id": "PUBIS",
+          "latine": "Os pubis",
+          "turkish": "Pubis (Çatı kemiği)",
+          "english": "Pubis",
+          "desc_tr": "Pelvis'in tabanını oluşturan kemik."
+        },
+        {
+          "pin_id": "ACETABULUM",
+          "latine": "Acetabulum",
+          "turkish": "Asetabulum (Kalça eklem çukuru)",
+          "english": "Acetabulum",
+          "desc_tr": "İliyum, işkiyum ve pubis'in birleşerek femur başını kabul ettiği derin çukur."
+        }
+      ]
+    },
+    {
+      "bone_id": "TIBIA_FIBULA",
+      "group_codes": ["A", "B", "C", "D"],
+      "latine_name": "Ossa cruris (Tibia & Fibula)",
+      "turkish_name": "Baldır Kemikleri (Kaval ve Kamış)",
+      "english_name": "Leg bones (Shin & Calf)",
+      "landmarks": [
+        {
+          "pin_id": "TUBEROSITAS_TIBIAE",
+          "latine": "Tuberositas tibiae",
+          "turkish": "Kaval kemiği çıkıntısı",
+          "english": "Tibial tuberosity",
+          "desc_tr": "Patellar ligamentin yapıştığı kraniyal kemik kabartısı."
+        },
+        {
+          "pin_id": "COCHLEA_TIBIAE",
+          "latine": "Cochlea tibiae",
+          "turkish": "Tibial koklea (Aşık eklem yüzü)",
+          "english": "Cochlea of tibia",
+          "desc_tr": "Talus ile tarsal eklemi oluşturan distal eklem yüzeyi."
+        }
+      ]
+    }
+  ]
+}

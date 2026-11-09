@@ -49,11 +49,19 @@ Tüm temel araçlar kurulmuş ve doğrulanmıştır:
 
 ---
 
+### [x] Faz 1: Altyapı ve Modlama Ortamının Kurulması (TAMAMLANDI)
+1. **BepInEx 5 Kurulumu:** `tools\BepInEx` dosyaları (`winhttp.dll`, `doorstop_config.ini`, `.doorstop_version`, `BepInEx\`) doğrudan `work\VetOs_Game\` dizinine entegre edildi.
+2. **UnityExplorer Kurulumu:** Unity 2022 uyumlu UnityExplorer ve UniverseLib eklentileri `work\VetOs_Game\BepInEx\plugins\UnityExplorer\` altına başarıyla yerleştirildi.
+3. **C# Mod Projesi (`src\VetOsEnhanced\`):** `net472` yerine Unity 2022.3 Mono ile %100 uyumlu `netstandard2.1` hedefiyle SDK-style `.csproj` yapılandırıldı.
+4. **İlk Eklenti Derlemesi:** `Plugin.cs` (Harmony başlatma, loglama ve F1 test kancası) `.NET 8` SDK ile sıfır hata ve sıfır uyarıyla derlenerek `work\VetOs_Game\BepInEx\plugins\VetOsEnhanced.dll` olarak dağıtıldı.
+5. **Özel Proje Yetenekleri (Skills):** `.agents\skills\` altında 5 kritik proje yeteneği (`bepinex-harmony-modder`, `unity-android-arm64-rebuilder`, `unity-comparative-anatomy-matrix`, `unity-mono-headless-inspector`, `vet-anatomy-terminology-sync`) oluşturuldu.
+6. **Türkçe Terminoloji Sözlüğü:** `assets\terms.json` (NAV 6. Baskı standartlarında köpek, at, sığır ve koyun temel kemik ve çıkıntıları) hazırlandı.
+
+---
+
 ## 4. Sıradaki Adım
 
-**Faz 1: Altyapı ve Modlama Ortamının Kurulması**
-1. `tools\BepInEx_x64_5.4.23.6` dosyalarının `work\VetOs_Game\` dizinine kopyalanması (`winhttp.dll`, `doorstop_config.ini`, `BepInEx/`).
-2. `UnityExplorer` eklentisinin `work\VetOs_Game\BepInEx\plugins` dizinine yerleştirilmesi.
-3. "Merhaba" yazan örnek bir BepInEx test eklentisinin (`VetOsEnhanced.Core`) `.NET 8` SDK / `net472` hedefiyle derlenmesi.
-4. Derleme ve dağıtım betiğinin (`build.ps1`) hazırlanması.
-5. Oyunun çalıştırılarak BepInEx loglarının ve UnityExplorer arayüzünün doğrulanması.
+**Faz 2: Türkçe Sözlük Enjeksiyonu ve İlk Harmony Yaması**
+1. `Plugin.cs` içerisine `assets\terms.json` okuyucusunun eklenmesi.
+2. `UI_TreeViewController.ShowBoneInfo` ve `UI_PinPoint_Controller` için Harmony Postfix yamalarının yazılarak arayüzdeki Latince zorunluluğunun Türkçe ile değiştirilmesi.
+3. Modlu oyunun çalıştırılarak ekranda test edilmesi.
