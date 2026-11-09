@@ -34,7 +34,9 @@ jobs:
 
           if [ -n "$ALF_FILE" ] && [ -f "$ALF_FILE" ]; then
             echo "Bulunan alf dosyası: $ALF_FILE"
-            cp "$ALF_FILE" ./Unity_v2022.3.11f1.alf
+            if [ "$ALF_FILE" != "./Unity_v2022.3.11f1.alf" ]; then
+              cp "$ALF_FILE" ./Unity_v2022.3.11f1.alf
+            fi
             ls -la ./Unity_v2022.3.11f1.alf
           else
             echo "❌ HATA: .alf dosyası bulunamadı!"
